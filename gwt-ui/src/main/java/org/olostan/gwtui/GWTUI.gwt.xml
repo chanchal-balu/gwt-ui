@@ -1,0 +1,6 @@
+<module>
+    <inherits name='com.google.gwt.user.User'/>
+    <generate-with class="org.olostan.gwtui.rebind.UIClassGenerator">
+        <when-type-assignable class="org.olostan.gwtui.client.UIManager"/>
+    </generate-with>
+</module>
