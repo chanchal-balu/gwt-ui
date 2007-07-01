@@ -1,0 +1,39 @@
+#summary Here is description of how gwt-ui project would help building UI
+#labels Phase-Design,Featured,Phase-Implementation
+
+= Introduction =
+
+The main purpose is to eliminate repetitive code if constructing UI in GWT. Its is much easer to describe UI in XML file and then let GWT to build your interface. 
+
+Moreover, changing states of UI often also takes much time - to remove/hide one widgets, and to show/add anothers. This `gwt-ui` also handles state changes.
+
+= Details =
+
+Lets see basic and smallest example of how to use gwt-ui.
+
+# First of all lets define layout and states:
+
+{{{
+<gwtui>
+<layout>
+   <container id='main' type='FlowPanel'/>     
+</layout>
+<states widgetpackage='client'>
+  <state id='fiststate' default='true' >
+     <content container='main'><widget type='MyWidget1' /></content>
+  </state>  
+  <state id='anotherstate'>
+     <content container='main'><widget type='MyWidget2' /></content>
+  </state>
+</states>
+</gwtui>
+}}}
+
+This xml file describes small one _container_ and two _states_, each state with one widget in that container.
+
+Lets assume that we already have two widgets - `MyWidget1` and `MyWidget2` in `client` package.
+
+# You need to include gwtui.jar file and add this line to your module definition file:
+{{{
+	<inherits name='org.olostan.gwtui.GWTUI'/>
+}}}
