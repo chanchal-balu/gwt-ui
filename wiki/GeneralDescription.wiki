@@ -46,7 +46,7 @@ You need to include gwtui.jar file and add this line to your module definition f
 	<inherits name='org.olostan.gwtui.GWTUI'/>
 }}}
 
-==3. Custom Interface
+==3. Custom Interface==
 
 Now you should define some interface, that implements UIManager interface. Using this interface we can publish some containers, so you can add them to page.
 
@@ -60,7 +60,7 @@ public interface MyUI extends UIManager {
 *Note* that signature of method should be: `public <Type> get<Id-Of-Container>Container();`
 Where `<Type>` is some type, in which real container object can be casted. 
 
-==3. Create UI implementation and use/add containers
+==3. Create UI implementation and use/add containers==
 
 To use generated UI you should create implementation using `GWT.create(...)` method. For example, there is implementation of sample `EntryPoint` that add constructed interface to `RootPanel`:
 
@@ -77,3 +77,10 @@ public class MyModule implements EntryPoint {
 
 Later you can change state just calling `ui.setState('anotherstate');`.
 
+=Extended features=
+
+Where is some extended features of gwt-ui:
+  * State inheritance: any state can have parent state. So you can write some general state with basic UI, and then derive some state with only changes.
+  * In-line visual style of containers (like "`align='right' width='100%' style='bar'`")
+  * State-aware widgets: If widget implements `UIStateListener` interface and added to UI, it will be notified about state change.
+  * _(Planned)_ Container can be any type extends `Panel` class or `gwtui.Containable` interface
