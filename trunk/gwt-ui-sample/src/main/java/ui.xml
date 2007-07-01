@@ -1,0 +1,28 @@
+<gwtui>
+<layout>
+   <container type='VerticalPanel' id='main' width='100%'>     
+     <container id='top' type='HorizontalPanel' align='right' width='100%' style='bar' />
+     <container id='middle' type='HorizontalPanel' width="100%" >
+        <container id='leftContent' type='VerticalPanel' style='bar' cellwidth='250px' width='100%' />
+        <container id='centerContent' type='VerticalPanel' style='bar' width='100%' />
+        <container id='rightContent' type='VerticalPanel' style='bar' cellwidth='150px' />
+     </container>
+     <container id='bottom' type='HorizontalPanel' align='center' width='100%' style='bar' />
+   </container>   
+</layout>
+<states widgetpackage='client.widgets'>
+  <state id='base' >
+     <content container='top'><widget type='LogoWidget' /></content>
+     <content container='leftContent'><widget type='LeftMenu' /></content>
+     <content container='rightContent'><widget type='HelpWidget' /> </content>
+     <content container='bottom'><widget type='CopyrightWidget' /></content>
+  </state>  
+
+  <state id='general' default='true' parent='base'>
+     <content container='centerContent'><widget type='HelloWidget' name='helloWidget' /></content>
+  </state>  
+  <state id='state1' parent='base'>
+     <content container='centerContent'><widget type='State1Widget' /></content>     
+  </state>
+</states>
+</gwtui>
