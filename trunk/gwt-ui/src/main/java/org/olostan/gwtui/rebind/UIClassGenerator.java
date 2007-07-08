@@ -42,12 +42,12 @@ import java.net.URL;
 public class UIClassGenerator extends Generator {
     private TreeLogger logger;
     private GeneratorContext ctx;
-    private ClassLoader classLoader;
 
     private UIConfiguration ui;
 
 
     private void LoadConfiguration() throws UnableToCompleteException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL moduleURL = classLoader.getResource("ui.xml");
         if (moduleURL != null) {
             String externalForm = moduleURL.toExternalForm();
@@ -119,7 +119,6 @@ public class UIClassGenerator extends Generator {
             throws UnableToCompleteException {
         ctx = generatorContext;
         logger = treeLogger;
-        classLoader = Thread.currentThread().getContextClassLoader();
         return GenerateManagerClass(requestedType);
     }
 }

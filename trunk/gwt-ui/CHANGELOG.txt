@@ -1,4 +1,4 @@
 
-
-Revision 7: SimplePanel support/Unified getter prefix
+Revision 19: Added support for Gwt*Widget() methods in extenders of UIManager interface
+Revision 7: SimplePanel support/Unified getter prefix (get/Get/GET)
 ------- Release 1.
