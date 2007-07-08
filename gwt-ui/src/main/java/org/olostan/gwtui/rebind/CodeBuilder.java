@@ -90,7 +90,7 @@ class CodeBuilder {
                     String containerName = name.substring(3, name.length() - 9);
                     Container container = ui.FindContainerById(containerName);
                     if (container == null) {
-                        logger.log(TreeLogger.ERROR, "Container with ID=" + containerName + " was not found", null);
+                        logger.log(TreeLogger.ERROR, "Container with ID='" + containerName + "' was not found", null);
                         throw new UnableToCompleteException();
                     }
                     writer.print("public ");
@@ -101,6 +101,22 @@ class CodeBuilder {
                     writer.print(container.getSourceId());
                     writer.println("; }");
                 }
+                if (name.toUpperCase().startsWith("GET") && name.endsWith("Widget")) {
+                    String widgetName = name.substring(3, name.length() - 6);
+                    WidgetDefinition widget = ui.FindWidgetById(widgetName);
+                    if (widget==null) {
+                        logger.log(TreeLogger.ERROR, "Widget with ID '" + widgetName + "' was not found", null);
+                        throw new UnableToCompleteException();
+                    }
+                    writer.print("public ");
+                    writer.print(method.getReturnType().getQualifiedSourceName());
+                    writer.print(" ");
+                    writer.print(method.getName());
+                    writer.print("() { return ");
+                    writer.print(widget.getName());
+                    writer.println("; }");                    
+                }
+
             }
 
             writer.commit(logger);
