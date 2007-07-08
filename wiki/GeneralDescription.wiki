@@ -17,7 +17,7 @@ Lets see basic and smallest example of how to use gwt-ui.
 
 ==1. Layout XML==
 
-First of all lets define layout and states:
+First of all lets define layout and states. To do that, we need to create file `ui.xml` and put in the folder, where module definition (*.gwt.xml) with such contents:
 
 {{{
 <gwtui>
