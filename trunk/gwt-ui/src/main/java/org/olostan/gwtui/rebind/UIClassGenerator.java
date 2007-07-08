@@ -46,7 +46,7 @@ public class UIClassGenerator extends Generator {
     private UIConfiguration ui;
 
 
-    private void LoadConfiguration() throws UnableToCompleteException {
+    private void LoadConfiguration() throws UnableToCompleteException {        
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL moduleURL = classLoader.getResource("ui.xml");
         if (moduleURL != null) {

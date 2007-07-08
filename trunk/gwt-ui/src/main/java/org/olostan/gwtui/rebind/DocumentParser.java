@@ -76,7 +76,7 @@ class DocumentParser {
 
         NamedNodeMap attributes = states.getAttributes();
         Node attribute = attributes.getNamedItem("widgetpackage");
-        if (attribute != null) widgetPackage = attribute.getTextContent();
+        if (attribute != null) widgetPackage = attribute.getNodeValue();
 
 
         NodeList statesList = states.getChildNodes();
@@ -108,9 +108,9 @@ class DocumentParser {
         String id = null;
         NamedNodeMap attributes = containerNode.getAttributes();
         Node attribute = attributes.getNamedItem("type");
-        if (attribute != null) type = attribute.getTextContent();
+        if (attribute != null) type = attribute.getNodeValue();
         attribute = attributes.getNamedItem("id");
-        if (attribute != null) id = attribute.getTextContent();
+        if (attribute != null) id = attribute.getNodeValue();
 
 
         Container container;
@@ -122,7 +122,7 @@ class DocumentParser {
         // visual properties
         attribute = attributes.getNamedItem("align");
         if (attribute != null) {
-            String align = attribute.getTextContent();
+            String align = attribute.getNodeValue();
             /*
             if (align.equals("center")) container.setHalign(HasHorizontalAlignment.ALIGN_CENTER);
             else if (align.equals("left")) container.setHalign(HasHorizontalAlignment.ALIGN_LEFT);
@@ -130,11 +130,11 @@ class DocumentParser {
             container.setHalign(align);
         }
         attribute = attributes.getNamedItem("width");
-        if (attribute != null) container.setWidth(attribute.getTextContent());
+        if (attribute != null) container.setWidth(attribute.getNodeValue());
         attribute = attributes.getNamedItem("cellwidth");
-        if (attribute != null) container.setCellWidth(attribute.getTextContent());
+        if (attribute != null) container.setCellWidth(attribute.getNodeValue());
         attribute = attributes.getNamedItem("style");
-        if (attribute != null) container.setStyle(attribute.getTextContent());
+        if (attribute != null) container.setStyle(attribute.getNodeValue());
 
         NodeList list = containerNode.getChildNodes();
         if (list.getLength() != 0) {
@@ -151,7 +151,7 @@ class DocumentParser {
         String id;
         NamedNodeMap attributes = stateNode.getAttributes();
         Node attribute = attributes.getNamedItem("id");
-        id = attribute.getTextContent();
+        id = attribute.getNodeValue();
 
         StateDefinition state = new StateDefinition(id);
 
@@ -160,7 +160,7 @@ class DocumentParser {
 
         attribute = attributes.getNamedItem("parent");
         if (attribute != null) {
-            String parentStateName = attribute.getTextContent();
+            String parentStateName = attribute.getNodeValue();
             state.setParent(ui.FindStateById(parentStateName));
         }
 
@@ -180,7 +180,7 @@ class DocumentParser {
         String containerName;
         NamedNodeMap attributes = contentNode.getAttributes();
         Node attribute = attributes.getNamedItem("container");
-        containerName = attribute.getTextContent();
+        containerName = attribute.getNodeValue();
         Container container = ui.FindContainerById(containerName);
         if (container == null) throw new InvalidSyntaxException("Content with invalid container:" + containerName);
         Content content = new Content(container);
@@ -199,12 +199,12 @@ class DocumentParser {
         String widgetTypeName;
         NamedNodeMap attributes = widgetNode.getAttributes();
         Node attribute = attributes.getNamedItem("type");
-        widgetTypeName = attribute.getTextContent();
+        widgetTypeName = attribute.getNodeValue();
         if (widgetPackage != null) widgetTypeName = widgetPackage + "." + widgetTypeName;
 
         String widgetName = null;
         attribute = attributes.getNamedItem("name");
-        if (attribute != null) widgetName = attribute.getTextContent();
+        if (attribute != null) widgetName = attribute.getNodeValue();
 
 
         JType type;
