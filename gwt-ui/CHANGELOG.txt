@@ -1,0 +1,4 @@
+
+
+Revision 7: SimplePanel support/Unified getter prefix
+------- Release 1.
