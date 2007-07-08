@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Container {
     public enum ContainerTypes {
-        VerticalPanel, HorizontalPanel, FlowPanel
+        VerticalPanel, HorizontalPanel, FlowPanel, SimplePanel
     }
 
     private List<Container> subContainers = new LinkedList<Container>();

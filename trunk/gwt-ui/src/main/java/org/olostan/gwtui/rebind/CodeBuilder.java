@@ -86,7 +86,7 @@ class CodeBuilder {
             JMethod[] methods = sourceClass.getMethods();
             for (JMethod method : methods) {
                 String name = method.getName();
-                if (name.startsWith("get") && name.endsWith("Container")) {
+                if (name.toUpperCase().startsWith("GET") && name.endsWith("Container")) {
                     String containerName = name.substring(3, name.length() - 9);
                     Container container = ui.FindContainerById(containerName);
                     if (container == null) {
