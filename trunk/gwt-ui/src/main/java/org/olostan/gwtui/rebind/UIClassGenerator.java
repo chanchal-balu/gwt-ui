@@ -46,9 +46,22 @@ public class UIClassGenerator extends Generator {
     private UIConfiguration ui;
 
 
-    private void LoadConfiguration() throws UnableToCompleteException {        
+    private void LoadConfiguration(String typeName) throws UnableToCompleteException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL moduleURL = classLoader.getResource("ui.xml");
+
+        URL moduleURL;
+        // Lets search for definition file
+        // first - direct search
+        moduleURL =  classLoader.getResource(typeName+".ui.xml");
+        // then only last part
+        if (moduleURL==null && typeName.indexOf('.')!=-1) {
+            typeName = typeName.substring(typeName.lastIndexOf('.')+1);
+            classLoader.getResource(typeName+".ui.xml");
+        }
+        // and last - simple
+        if (moduleURL==null) moduleURL =  classLoader.getResource("ui.xml");
+
+        // found?
         if (moduleURL != null) {
             String externalForm = moduleURL.toExternalForm();
             logger.log(TreeLogger.TRACE, "UI location: " + externalForm, null);
@@ -84,8 +97,8 @@ public class UIClassGenerator extends Generator {
         }
         if (moduleURL == null) {
             String msg = "Unable to find '"
-                    + "ui.xml"
-                    + "' on your classpath; could be a typo, or maybe you forgot to include a classpath entry for source?";
+                    + "ui.xml' or '"+typeName
+                    + ".ui.xml' on your classpath; could be a typo, or maybe you forgot to include a classpath entry for source?";
             logger.log(TreeLogger.ERROR, msg, null);
             throw new UnableToCompleteException();
         }
@@ -93,10 +106,13 @@ public class UIClassGenerator extends Generator {
     }
 
     public String GenerateManagerClass(String requestedType) throws UnableToCompleteException {
-        LoadConfiguration();
-
+        LoadConfiguration(requestedType);
+        // TODO: Reset IdOracle only when needed (taking into account 'skins')
+        /*
         if (ctx.getTypeOracle().getReloadCount() != IdOracle.Instance().getReloadCounter())
             IdOracle.Instance().Reset(ctx.getTypeOracle().getReloadCount());
+            */
+        IdOracle.Instance().Reset(ctx.getTypeOracle().getReloadCount());
 
         CodeBuilder builder = new CodeBuilder(ui, ctx, logger);
 
