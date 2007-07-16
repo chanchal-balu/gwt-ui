@@ -24,6 +24,9 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+
+import org.olostan.gwtui.client.NotificationReciever;
+import org.olostan.gwtui.client.NotificationSender;
 import org.olostan.gwtui.client.UIStateListener;
 import org.olostan.gwtui.rebind.model.Container;
 import org.olostan.gwtui.rebind.model.Content;
@@ -43,6 +46,7 @@ class CodeBuilder {
 
     // building-time
     private final JClassType UIStateListenerType;
+    private boolean notificationSupport = false;
 
     public CodeBuilder(UIConfiguration ui, GeneratorContext ctx, TreeLogger logger) {
         this.ui = ui;
@@ -56,8 +60,19 @@ class CodeBuilder {
         PrintWriter pw = ctx.tryCreate(logger, packageName, resultingType);
         if (pw != null) {
             ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(
-                    packageName, resultingType);
+                    packageName, resultingType);            
+            // Check whether we have to build notification support
+            JClassType notificationSender = this.ctx.getTypeOracle().findType(NotificationSender.class.getName());
+            
+            JClassType[] interfaces = sourceClass.getImplementedInterfaces();
+            for (JClassType type : interfaces) {
+            	if (type.equals(notificationSender))  notificationSupport = true;
+            }
+            
+            // Add implemented interfaces
             composerFactory.addImplementedInterface(sourceClass.getQualifiedSourceName());
+            if (notificationSupport) composerFactory.addImplementedInterface(notificationSender.getQualifiedSourceName());
+            
             // TODO: import only used types
             composerFactory.addImport("com.google.gwt.user.client.ui.*");
             composerFactory.addImport("com.google.gwt.user.client.ui.HasHorizontalAlignment");
@@ -71,7 +86,7 @@ class CodeBuilder {
 
             WriteWidgetsDefinition(writer);
 
-            // costructor
+            // Constructor
             writer.println();
             writer.println("private " + resultingType + "() {");
             writer.indent();
@@ -118,6 +133,7 @@ class CodeBuilder {
                 }
 
             }
+            if (notificationSupport) WriteNotificationCode(writer);
 
             writer.commit(logger);
         }
@@ -125,7 +141,29 @@ class CodeBuilder {
 
     }
 
-    private void WriteChangeStateMember(SourceWriter file) {
+    private void WriteNotificationCode(SourceWriter writer) {
+    	writer.println("public void SendNotification(Object data, boolean onlyVisible) {");
+    	writer.indent();
+    	for (WidgetDefinition widget : ui.getWidgets()) {
+    		// check if we support NotificationReciever    		
+    		if (NotificationReciever.class.isAssignableFrom(widget.getClass())) 
+    		{
+    			writer.print("if (");
+    			writer.print(widget.getName());
+    			writer.print(" !=null && ( !onlyVisible || ");
+    			writer.print(widget.getName());
+    			writer.print(".getParent()!=null )) ");
+    			writer.print(widget.getName());
+    			writer.println(".OnUINotification(data);");
+    		}
+    	}
+    	writer.outdent();
+    	writer.println("}");
+    	
+		
+	}
+
+	private void WriteChangeStateMember(SourceWriter file) {
         // create state implementation functions:
         file.println("private ArrayList widgetsToRemove = null;");
         file.println();
