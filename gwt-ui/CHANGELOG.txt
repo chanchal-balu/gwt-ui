@@ -1,4 +1,4 @@
-
+Revision 14: Added 'Notifications' support and several ui definitions in one project
 Revision 11: Removed DOM Level 3 calls in favor of DOM Level 2 (issue #1)
 Revision 10: Added support for Gwt*Widget() methods in extenders of UIManager interface
 Revision 7: SimplePanel support/Unified getter prefix (get/Get/GET)
