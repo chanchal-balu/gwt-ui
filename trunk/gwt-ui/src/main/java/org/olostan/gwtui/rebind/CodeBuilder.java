@@ -144,9 +144,10 @@ class CodeBuilder {
     private void WriteNotificationCode(SourceWriter writer) {
     	writer.println("public void SendNotification(Object data, boolean onlyVisible) {");
     	writer.indent();
+    	JClassType notificationRecieverClass = ctx.getTypeOracle().findType(NotificationReciever.class.getName());
     	for (WidgetDefinition widget : ui.getWidgets()) {
     		// check if we support NotificationReciever    		
-    		if (NotificationReciever.class.isAssignableFrom(widget.getClass())) 
+    		if (notificationRecieverClass.isAssignableFrom(widget.getJType())) 
     		{
     			writer.print("if (");
     			writer.print(widget.getName());

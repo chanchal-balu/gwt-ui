@@ -56,7 +56,7 @@ public class UIClassGenerator extends Generator {
         // then only last part
         if (moduleURL==null && typeName.indexOf('.')!=-1) {
             typeName = typeName.substring(typeName.lastIndexOf('.')+1);
-            classLoader.getResource(typeName+".ui.xml");
+            moduleURL = classLoader.getResource(typeName+".ui.xml");
         }
         // and last - simple
         if (moduleURL==null) moduleURL =  classLoader.getResource("ui.xml");

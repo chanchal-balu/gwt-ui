@@ -40,7 +40,12 @@ class DocumentParser {
 
 
     public class InvalidSyntaxException extends Exception {
-        public InvalidSyntaxException(String message) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -6391794870749602751L;
+
+		public InvalidSyntaxException(String message) {
             super(message);
         }
     }
