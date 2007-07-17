@@ -1,9 +1,15 @@
 package client.widgets;
 
+import client.GWTUISample;
+
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.olostan.gwtui.client.UIStateListener;
 
 /**
@@ -21,6 +27,12 @@ public class HelpWidget extends Composite implements UIStateListener {
         panel.setCellHorizontalAlignment(header, HasHorizontalAlignment.ALIGN_RIGHT);
         content.setStyleName("justified-text");
         panel.add(content);
+        Button button = new Button("Send message to widgets");
+        button.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				GWTUISample.getInstance().getUi().SendNotification("Message", true);
+			}} );
+        panel.add(button);
         initWidget(panel);
     }
 

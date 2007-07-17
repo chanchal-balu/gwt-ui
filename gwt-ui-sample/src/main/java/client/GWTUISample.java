@@ -11,7 +11,7 @@ import com.google.gwt.user.client.HistoryListener;
  *         Date: 01.07.2007 19:22:56
  */
 public class GWTUISample implements EntryPoint, HistoryListener {
-    MyUI ui;
+    private MyUI ui;
     public void onModuleLoad() {
          //UIManager myManager = (UIManager) GWT.create(UIManager.class);
         ui = (MyUI) GWT.create(MyUI.class);
@@ -20,9 +20,21 @@ public class GWTUISample implements EntryPoint, HistoryListener {
         ui.setState(History.getToken());
         History.addHistoryListener(this);
         RootPanel.get("loading").setVisible(false);
+        Instance = this;
     }
 
     public void onHistoryChanged(String historyToken) {
         ui.setState(historyToken);
     }
+    private static GWTUISample Instance;
+    
+	public static GWTUISample getInstance() {
+		return Instance;
+	}
+
+	public MyUI getUi() {
+		return ui;
+	}
+	
+    
 }
