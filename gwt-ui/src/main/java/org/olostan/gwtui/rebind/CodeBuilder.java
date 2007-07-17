@@ -185,7 +185,7 @@ class CodeBuilder {
 
 
         file.println("private String currentState = null;");
-
+        file.println("public String getState() { return currentState; }");
 
         file.println("public void setState(String state) {");
         file.indent();
