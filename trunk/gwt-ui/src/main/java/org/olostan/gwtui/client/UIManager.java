@@ -23,4 +23,5 @@ package org.olostan.gwtui.client;
  */
 public interface UIManager {
     public void setState(String state);
+    public String getState();
 }
