@@ -18,6 +18,7 @@
 package org.olostan.gwtui.rebind;
 
 import org.olostan.gwtui.rebind.model.Container;
+import org.olostan.gwtui.rebind.model.ModuleDefinition;
 import org.olostan.gwtui.rebind.model.StateDefinition;
 import org.olostan.gwtui.rebind.model.WidgetDefinition;
 
@@ -32,6 +33,7 @@ class UIConfiguration {
     private List<Container> containers = new LinkedList<Container>();
     private List<StateDefinition> states = new LinkedList<StateDefinition>();
     private List<WidgetDefinition> widgets = new LinkedList<WidgetDefinition>();
+    private List<ModuleDefinition> modules = new LinkedList<ModuleDefinition>();
     private StateDefinition defaultState = null;
 
     public List<Container> getContainers() {
@@ -76,4 +78,9 @@ class UIConfiguration {
         }
         return null;
     }
+
+	public List<ModuleDefinition> getModules() {
+		return modules;
+	}
+    
 }

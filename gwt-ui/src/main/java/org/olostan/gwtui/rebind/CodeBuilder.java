@@ -30,6 +30,7 @@ import org.olostan.gwtui.client.NotificationSender;
 import org.olostan.gwtui.client.UIStateListener;
 import org.olostan.gwtui.rebind.model.Container;
 import org.olostan.gwtui.rebind.model.Content;
+import org.olostan.gwtui.rebind.model.ModuleDefinition;
 import org.olostan.gwtui.rebind.model.StateDefinition;
 import org.olostan.gwtui.rebind.model.WidgetDefinition;
 
@@ -67,13 +68,23 @@ class CodeBuilder {
             JClassType[] interfaces = sourceClass.getImplementedInterfaces();
             for (JClassType type : interfaces) {
             	if (type.equals(notificationSender))  notificationSupport = true;
+            	// Check all modules for that interface
+            	for (ModuleDefinition module : ui.getModules()) {
+                	if (module.getMarkerInterface().equals(type)) module.setShouldImplement(true);
+                }
             }
             
             // Add implemented interfaces
             composerFactory.addImplementedInterface(sourceClass.getQualifiedSourceName());
             if (notificationSupport) composerFactory.addImplementedInterface(notificationSender.getQualifiedSourceName());
             
+            // Add interfaces, implemented by modules
+            for (ModuleDefinition module : ui.getModules()) {
+            	if (module.isShouldImplement() && module.getMarkerInterface()!=null) composerFactory.addImplementedInterface(module.getMarkerInterface().getName());
+            }
+            
             // TODO: import only used types
+            // TODO: import module imports (?)
             composerFactory.addImport("com.google.gwt.user.client.ui.*");
             composerFactory.addImport("com.google.gwt.user.client.ui.HasHorizontalAlignment");
             composerFactory.addImport("java.util.ArrayList");
@@ -134,6 +145,15 @@ class CodeBuilder {
 
             }
             if (notificationSupport) WriteNotificationCode(writer);
+            
+            UIGeneratorContext context = new UIGeneratorContext(logger,ctx,ui, writer);
+        	for (ModuleDefinition module : ui.getModules()) {
+            	if (module.isShouldImplement()) {
+            		module.getModuleInstance().GenerateBody(context);
+            	}
+            }
+            
+            
 
             writer.commit(logger);
         }
