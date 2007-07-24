@@ -25,6 +25,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracleException;
 import com.google.gwt.user.client.ui.Widget;
 import org.olostan.gwtui.rebind.model.Container;
 import org.olostan.gwtui.rebind.model.Content;
+import org.olostan.gwtui.rebind.model.ModuleDefinition;
 import org.olostan.gwtui.rebind.model.StateDefinition;
 import org.olostan.gwtui.rebind.model.WidgetDefinition;
 import org.w3c.dom.Document;
@@ -72,6 +73,7 @@ class DocumentParser {
     public void Parse() throws InvalidSyntaxException {
         LoadContainers();
         LoadStates();
+        LoadModules();
     }
 
     private void LoadStates() throws InvalidSyntaxException {
@@ -93,8 +95,21 @@ class DocumentParser {
             }
         }
     }
+    private void LoadModules() throws InvalidSyntaxException {
+    	NodeList topModules = document.getElementsByTagName("modules");
+        if (topModules.getLength() != 1) throw new InvalidSyntaxException("Only one set of modules allowed");
+        Node modules = topModules.item(0);
+        NodeList modulesList = modules.getChildNodes();
+        for (int c = 0; c < modulesList.getLength(); c++) {
+            Node moduleNode = modulesList.item(c);
+            if (moduleNode.getNodeName().equals("module")) {            	
+                ModuleDefinition module = LoadModule(moduleNode);
+                ui.getModules().add(module);            	
+            }
+        }
+    }
 
-    private void LoadContainers() throws InvalidSyntaxException {
+	private void LoadContainers() throws InvalidSyntaxException {
         NodeList layouts = document.getElementsByTagName("layout");
         if (layouts.getLength() != 1) throw new InvalidSyntaxException("Only one layout supported");
         Node layout = layouts.item(0);
@@ -151,6 +166,37 @@ class DocumentParser {
         }
         return container;
     }
+    
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    private ModuleDefinition LoadModule(Node moduleNode) throws InvalidSyntaxException {
+		String className;
+		NamedNodeMap attributes = moduleNode.getAttributes();
+        Node attribute = attributes.getNamedItem("class");
+        if (attribute==null) throw new InvalidSyntaxException("Module should have class attribute");
+        className = attribute.getNodeValue();
+        
+        
+        JClassType markerInterface = null;
+        attribute = attributes.getNamedItem("condition");
+        if (attribute!=null) {
+        	String markerInterfaceName = attribute.getNodeValue();
+        	markerInterface = ctx.getTypeOracle().findType(markerInterfaceName);
+        	if (markerInterface==null) throw new InvalidSyntaxException("Module condition interface '"+markerInterfaceName+"' was not found.");
+        	if (markerInterface.isInterface()==null) throw new InvalidSyntaxException("Module condition '"+markerInterfaceName+"' is not interface.");        	
+        }
+        
+		Class<? extends Object> moduleClass;        
+        try {
+			moduleClass = classLoader.loadClass(className);
+		} catch (ClassNotFoundException e) {
+			throw new InvalidSyntaxException("Module class '"+className+"' was not found");
+		}   
+		if (!moduleClass.isAssignableFrom(ModuleGenerator.class)) 
+			throw new InvalidSyntaxException("Module class '"+className+"' do not implements or inherits from ModuleGenerator");
+		ModuleDefinition def = new ModuleDefinition(moduleClass, markerInterface);
+		return def;		
+	}
+
 
     private StateDefinition LoadState(Node stateNode) throws InvalidSyntaxException {
         String id;
